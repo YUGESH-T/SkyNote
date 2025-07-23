@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SkyNote</title>
+
+  <link rel="stylesheet" href="Home.css" />
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <main class="container transition-section">
+    <header>
+      <h1>SkyNote <i class="fas fa-cloud-sun"></i></h1>
+    </header>
+
+    <div class="search">
+      <input type="text" id="searchInput"  list="citySuggestions" placeholder="Enter a city..." />
+      <datalist id="citySuggestions"></datalist>
+      <button id="searchBtn"><i class="fas fa-search"></i> Search</button>
+    </div>
+
+    <div class="clock" id="clock"><i class="fas fa-clock"></i> --:--:--</div>
+
+    <section class="weather-card glass transition-section">
+      <div id="weatherEmoji" class="emoji">🌈</div>
+      <p id="moodText">Loading mood...</p>
+      <img id="icon" alt="Weather Icon" />
+      <h2 id="location">City, Country</h2>
+      <h3 id="temperature">--°C</h3>
+      <p id="description">Condition</p>
+      <p id="humidity"><i class="fas fa-tint"></i> Humidity: --%</p>
+      <p id="wind"><i class="fas fa-wind"></i> Wind: --</p>
+      <p id="aqi"><i class="fas fa-smog"></i> AQI: --</p>
+    </section>
+        
+    <section class="details glass transition-section">
+      <h3><i class="fas fa-info-circle"></i> Weather Details</h3>
+      <div class="details-grid">
+        <div><i class="fas fa-thermometer-half"></i> <span id="feels">Feels Like: --°C</span></div>
+        <div><i class="fas fa-sun"></i> <span id="uv">UV Index: --</span></div>
+        <div><i class="fas fa-tachometer-alt"></i> <span id="pressure">Pressure: -- hPa</span></div>
+        <div><i class="fas fa-cloud"></i> <span id="clouds">Cloud Cover: --%</span></div>
+        <div><i class="fas fa-eye"></i> <span id="visibility">Visibility: -- km</span></div>
+        <div><i class="fas fa-arrow-up"></i> <span id="sunrise">Sunrise: --</span></div>
+        <div><i class="fas fa-arrow-down"></i> <span id="sunset">Sunset: --</span></div>
+      </div>
+    </section>
+    
+    <section class="hourly-forecast glass transition-section">
+      <h3><i class="fas fa-clock"></i> Hourly Forecast</h3>
+      <div class="hourly-scroll" id="hourlyScroll"></div>
+    </section>
+
+    <section class="forecast glass transition-section">
+      <h3><i class="fas fa-calendar-alt"></i> 3-Day Forecast</h3>
+      <div class="forecast-cards" id="forecastCards">
+      </div>
+    </section>
+
+    <section class="map-section glass transition-section">
+      <h3><i class="fas fa-map-marked-alt"></i> Live Satellite Map</h3>
+      <div id="map" class="map-container"></div>
+    </section>
+  </main>
+
+  <script src="Home.js"></script>
+</body>
+</html>
