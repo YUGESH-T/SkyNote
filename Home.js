@@ -100,7 +100,8 @@ function fetchWeather(city) {
         alert("No weather data found.");
       }
     })
-    .catch(() => alert("Could not fetch weather."));
+    .catch(console.error)
+    .finally(() => hideLoader());
 }
 
 function fetchCityTime(timezone) {
@@ -124,6 +125,36 @@ function fetchCityTime(timezone) {
   window.cityClockInterval = setInterval(updateClock, 1000);
 }
 
+function getLocationWeather() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+      const { latitude, longitude } = position.coords;
+      reverseGeocode(latitude, longitude);
+    }, error => {
+      console.error("Geolocation failed:", error.message);
+      alert("Please allow location access to fetch weather data.");
+    });
+  } else {
+    alert("Geolocation not supported by your browser.");
+  }
+}
+
+function reverseGeocode(lat, lon) {
+  const geocodeUrl = `https://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${apiKey}`;
+
+  fetch(geocodeUrl)
+    .then(res => res.json())
+    .then(data => {
+      const city = data.data[0].city_name;
+      const country = data.data[0].country_code;
+      locationEl.textContent = `${city}, ${country}`;
+      fetchWeather(city);       // Your main weather function
+      fetchForecast(city);      // Your forecast function
+    })
+    .catch(err => {
+      console.error("Reverse geocoding failed:", err);
+    });
+}
 
 function updateCurrentWeather(data) {
     const iconUrl = `https://www.weatherbit.io/static/img/icons/${data.weather.icon}.png`;
@@ -172,11 +203,13 @@ function fetchHourly(city) {
 }
 
 function fetchForecast(city) {
-  fetch(`${baseUrl}/forecast/daily?city=${city}&key=${apiKey}&days=4`)
+  fetch(`${baseUrl}/forecast/daily?city=${city}&key=${apiKey}&days=8`)
     .then(res => res.json())
     .then(data => {
       forecastCards.innerHTML = "";
-      for (let i = 1; i < 4; i++) {
+
+      // Skip today (index 0), loop through next 7 days (1 to 7)
+      for (let i = 1; i <= 7; i++) {
         const day = data.data[i];
         const card = document.createElement("div");
         card.className = "forecast-card";
@@ -190,7 +223,7 @@ function fetchForecast(city) {
           <p class="desc"><i class="fas fa-cloud"></i> ${day.weather.description}</p>
           <div class="temp-range">
             <p><i class="fas fa-temperature-high"></i> ${day.max_temp}°C</p>
-            <p><i class="fas fa-temperature-low"></i> ${day.min_temp}°C</p>
+            <p> <i class="fas fa-temperature-low"></i> ${day.min_temp}°C</p>
           </div>
           <p><i class="fas fa-wind"></i> ${day.wind_spd.toFixed(1)} m/s</p>
           <p><i class="fas fa-tint"></i> ${day.rh}%</p>
@@ -198,9 +231,10 @@ function fetchForecast(city) {
 
         forecastCards.appendChild(card);
       }
-    });
+    })
+    .catch(console.error)
+    .finally(() => hideLoader());
 }
-
 
 function applyTheme(condition) {
   const body = document.body;
@@ -224,26 +258,36 @@ function applyTheme(condition) {
 
 
 function getEmoji(condition) {
-    const c = condition.toLowerCase();
-  if (c.includes("sun")) return "☀️";
-  if (c.includes("rain")) return "🌧️";
-  if (c.includes("cloud")) return "☁️";
-  if (c.includes("snow")) return "❄️";
-  if (c.includes("storm") || c.includes("thunder")) return "⛈️";
-  if (c.includes("fog") || c.includes("mist")) return "🌫️";
-  return "🌡️";
+  const c = condition.toLowerCase();
+
+  if (c.includes("clear")) return "☀️";
+  if (c.includes("sun") || c.includes("sunny")) return "🌞";
+  if (c.includes("rain") || c.includes("shower")) return "🌧️";
+  if (c.includes("thunder") || c.includes("storm")) return "⛈️";
+  if (c.includes("snow") || c.includes("sleet") || c.includes("flurries")) return "❄️";
+  if (c.includes("cloud") || c.includes("overcast")) return "☁️";
+  if (c.includes("fog") || c.includes("mist") || c.includes("haze") || c.includes("smoke")) return "🌫️";
+  if (c.includes("wind") || c.includes("breeze")) return "💨";
+
+  return "🌡️"; // default
 }
 
+
 function getMood(condition) {
-    const c = condition.toLowerCase();
-  if (c.includes("sun")) return "Bright and sunny 🌞";
-  if (c.includes("rain")) return "Don't forget your umbrella ☔";
-  if (c.includes("cloud")) return "A bit gloomy out ⛅";
-  if (c.includes("snow")) return "Time for snowmen! ⛄";
-  if (c.includes("storm") || c.includes("thunder")) return "Storm's brewing ⚡";
-  if (c.includes("fog") || c.includes("mist")) return "Drive safe in the fog 🌫️";
-  return "Stay comfy and safe!";
+  const c = condition.toLowerCase();
+
+  if (c.includes("clear")) return "Clear skies ahead! ☀️";
+  if (c.includes("sun") || c.includes("sunny")) return "Bright and sunny 🌞";
+  if (c.includes("rain") || c.includes("shower")) return "Don't forget your umbrella ☔";
+  if (c.includes("thunder") || c.includes("storm")) return "Storm's brewing ⚡ Stay safe!";
+  if (c.includes("snow") || c.includes("flurries") || c.includes("sleet")) return "Time for snowmen! ⛄";
+  if (c.includes("cloud") || c.includes("overcast")) return "A bit gloomy out ⛅";
+  if (c.includes("fog") || c.includes("mist") || c.includes("haze") || c.includes("smoke")) return "Low visibility ahead 🌫️";
+  if (c.includes("wind") || c.includes("breeze")) return "Hold onto your hat! 💨";
+
+  return "Stay comfy and safe! 🌡️";
 }
+
 
 
 
@@ -267,6 +311,14 @@ function updateMap(lat, lon) {
     map.setView([lat, lon], zoomLevel);
     marker.setLatLng([lat, lon]);
   }
+}
+
+function showLoader() {
+  document.getElementById("loader").classList.remove("hidden");
+}
+
+function hideLoader() {
+  document.getElementById("loader").classList.add("hidden");
 }
 
 
@@ -310,4 +362,8 @@ function updateMap(lat, lon) {
 window.addEventListener("load", () => {
   fetchWeather("Madanapalle");
 });
+window.onload = () => {
+  getLocationWeather();
+};
+
 
