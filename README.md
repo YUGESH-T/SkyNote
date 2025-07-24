@@ -50,23 +50,21 @@ Get a free Weatherbit API key from Weatherbit.io
 
 Edit script.js and replace:
 
-js
-Copy code
+```js
+
 const apiKey = 'YOUR_WEATHERBIT_API_KEY';
 const maptilerKey = 'YOUR_MAPTILER_API_KEY';
 Open index.html in your browser and enjoy!
-
+```
 📁 Folder Structure
 markdown
 Copy code
 /SkyNote
 │
 ├── index.html
-├── style.css
-├── script.js
-└── assets/
-    ├── icons/
-    └── images/
+├── Home.css
+├── Home.js
+
 🙌 Acknowledgements
 Weatherbit.io – For accurate weather data
 
@@ -82,19 +80,3 @@ Font Awesome – For crisp, scalable icons
 ✅ Fully functional and responsive
 🧠 Emotion-based UI with soft transitions
 🎯 Future ideas: PWA support, voice forecast, mood music integration
-
-📃 License
-This project is licensed under the MIT License.
-
-💬 Feedback
-Found a bug? Have a feature idea?
-Open an issue or connect with me!
-
-Created with ❤️ by Yugesh Thimmampalli
-
-yaml
-Copy code
-
----
-
-Let me know if you'd like to convert this to a `README.md` file and download it — or if you want to include **GIF previews**, **badges**, or deployment links (like Netlify or GitHub Pages).
