@@ -1,7 +1,6 @@
 const apiKey = "e1bda8db8aac490a8031c449e4ff65e3";
 const baseUrl = "https://api.weatherbit.io/v2.0";
 
-// DOM Elements
 const searchInput = document.getElementById("searchInput");
 const searchBtn = document.getElementById("searchBtn");
 const weatherEmoji = document.getElementById("weatherEmoji");
@@ -40,7 +39,6 @@ searchInput.addEventListener("keydown", (e) => {
   }
 });
 
-// Preload suggestions
 const cities = [
   "New York", "London", "Tokyo", "Paris", "Madanapalle", "Delhi", "Sydney", "Berlin", "Toronto", "Dubai"
 ];
@@ -52,7 +50,6 @@ cities.forEach(city => {
   datalist.appendChild(option);
 });
 
-// Load external city list (if exists)
 fetch("cities.json")
   .then(res => res.json())
   .then(data => {
@@ -62,7 +59,7 @@ fetch("cities.json")
       datalist.appendChild(option);
     });
   })
-  .catch(() => { /* fallback handled silently */ });
+  .catch(() => {});
 
 function fetchWeather(city) {
   showLoader();
@@ -87,7 +84,7 @@ function fetchWeather(city) {
       }
     })
     .catch(console.error)
-    // .finally(() => hideLoader());
+    .finally(() => hideLoader());
 }
 
 
@@ -101,6 +98,7 @@ function updateBackground(condition) {
     snow: "linear-gradient(to right, #e0eafc, #cfdef3)",
     storm: "linear-gradient(to right, #373b44, #4286f4)",
     fog: "linear-gradient(to right, #757f9a, #d7dde8)",
+    windy: "linear-gradient(to right, #a8c0ff, #3f2b96)",
     default: "linear-gradient(to right, #83a4d4, #b6fbff)"
   };
 
@@ -114,7 +112,6 @@ function updateBackground(condition) {
     c.includes("fog") || c.includes("mist") ? "fog" :
     "default";
 
-  // Fade out effect
   backgroundEl.classList.add("fade-out");
 
   setTimeout(() => {
@@ -243,20 +240,26 @@ function fetchForecast(city) {
 }
 
 function applyTheme(condition) {
-  const body = document.body;
-  const transitionClass = "weather-transition";
+  const c = condition.toLowerCase();
+  document.body.className = ""; // Clear existing classes
 
-  body.className = transitionClass;
-
-  setTimeout(() => {
-    if (condition.includes("sun")) body.classList.add("sunny");
-    else if (condition.includes("rain")) body.classList.add("rainy");
-    else if (condition.includes("cloud")) body.classList.add("cloudy");
-    else if (condition.includes("snow")) body.classList.add("snowy");
-    else if (condition.includes("storm") || condition.includes("thunder")) body.classList.add("stormy");
-    else if (condition.includes("fog") || condition.includes("mist")) body.classList.add("foggy");
-    else body.classList.add("default");
-  }, 50);
+  if (c.includes("sun") || c.includes("clear")) {
+    document.body.classList.add("sunny");
+  } else if (c.includes("cloud")) {
+    document.body.classList.add("cloudy");
+  } else if (c.includes("rain") || c.includes("drizzle")) {
+    document.body.classList.add("rainy");
+  } else if (c.includes("storm") || c.includes("thunder")) {
+    document.body.classList.add("stormy");
+  } else if (c.includes("snow")) {
+    document.body.classList.add("snowy");
+  } else if (c.includes("fog") || c.includes("mist")) {
+    document.body.classList.add("foggy");
+  } else if (c.includes("haze") || c.includes("smoke")) {
+    document.body.classList.add("hazy");
+  } else {
+    document.body.classList.add("default-weather");
+  }
 }
 
 function getEmoji(condition) {

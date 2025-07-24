@@ -88,24 +88,50 @@ body::before {
 }
 
 /* THEMES */
+/* Smooth background fade effect */
+body {
+  transition: background 1s ease-in-out;
+}
+
+/* Weather condition gradient backgrounds */
 body.sunny {
-  background: linear-gradient(135deg, #f9d423, #ff4e50);
+  background: linear-gradient(135deg, #f9d423, #ff4e50); /* Bright sun */
 }
-body.rainy {
-  background: linear-gradient(135deg, #1e3c72, #2a5298);
+
+body.clear {
+  background: linear-gradient(135deg, #56ccf2, #2f80ed); /* Clear sky */
 }
+
 body.cloudy {
-  background: linear-gradient(135deg, #1a1c22, #5a5c6a, #a7a8b2);
+  background: linear-gradient(135deg, #d7d2cc, #304352); /* Cloudy sky */
 }
-body.snowy {
-  background: linear-gradient(135deg, #e0eafc, #cfdef3);
+
+body.rainy {
+  background: linear-gradient(135deg, #4e54c8, #8f94fb); /* Rainy mood */
 }
+
 body.stormy {
-  background: linear-gradient(135deg, #373b44, #4286f4);
+  background: linear-gradient(135deg, #232526, #414345); /* Thunderstorms */
 }
+
+body.snowy {
+  background: linear-gradient(135deg, #83a4d4, #b6fbff); /* Snowy */
+}
+
 body.foggy {
-  background: linear-gradient(135deg, #757f9a, #d7dde8);
+  background: linear-gradient(135deg, #757f9a, #d7dde8); /* Fog/Mist */
 }
+
+body.hazy {
+  background: linear-gradient(135deg, #e0c3fc, #8ec5fc); /* Haze */
+}
+body.windy {
+  background: linear-gradient(135deg, #a8edea, #fed6e3); /* Windy */
+}
+body.default-weather {
+  background: linear-gradient(135deg, #bdc3c7, #2c3e50); /* Fallback */
+}
+
 
 .container {
   max-width: 1100px;
