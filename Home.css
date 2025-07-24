@@ -3,6 +3,26 @@
   padding: 0;
   box-sizing: border-box;
 }
+#background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  transition: opacity 1s ease-in-out, filter 1s ease, transform 1s ease;
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+.background-fade.fade-out {
+  opacity: 0;
+  filter: blur(8px);
+  transform: scale(1.05);
+}
 
 body {
   font-family: "Segoe UI", sans-serif;
@@ -12,6 +32,8 @@ body {
   color: #fff;
   padding: 2vw;
   overflow-x: hidden;
+  transition: background 1.2s ease-in-out, color 0.4s ease-in-out;
+  will-change: background, color;
 }
 
 .loader {
@@ -31,6 +53,24 @@ body {
 
 .loader.hidden {
   display: none;
+}
+
+#bg-fade {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  transition: background 1.2s ease-in-out;
+  will-change: background;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: inherit;
+  transition: opacity 1s ease-in-out;
+  opacity: 1;
 }
 
 .spinner {
@@ -156,6 +196,10 @@ header h1 {
   padding-top: 1rem;
   scroll-behavior: smooth;
   scrollbar-width: none;
+}
+.hourly-scroll::-webkit-scrollbar,
+#forecastCards::-webkit-scrollbar {
+  display: none;
 }
 
 .hourly-card {
@@ -294,5 +338,71 @@ header h1 {
 
   .weather-card {
     padding: 1.2rem;
+  }
+}
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1200px;
+    padding: 2vw 4vw;
+  }
+
+  .forecast-card,
+  .hourly-card {
+    min-width: 180px;
+  }
+
+  .weather-card {
+    font-size: 1.2rem;
+  }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .search input {
+    flex: 1 1 50%;
+  }
+
+  .details-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .forecast-card {
+    min-width: 140px;
+  }
+}
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .weather-card {
+    padding: 1rem;
+  }
+
+  .forecast-card,
+  .hourly-card {
+    min-width: 100px;
+    padding: 0.8rem;
+  }
+
+  .forecast-card .day-name {
+    font-size: 1rem;
+  }
+
+  .details-grid {
+    gap: 10px;
+  }
+
+  .details-grid div {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  .clock {
+    font-size: 1rem;
+  }
+
+  .search input,
+  .search button {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
   }
 }
